@@ -5,73 +5,53 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\ValidationException;
 
-class UserController extends Controller
+class AuthController extends Controller
 {
-    // Middleware-like check for Admin status
-    private function checkAdmin($user) {
-        if (!$user->is_admin) {
-            abort(403, 'Unauthorized action.');
-        }
-    }
-
-    // GET: List all users
-    public function index(Request $request) {
-        $this->checkAdmin($request->user());
-        return User::all();
-    }
-
-    // POST: Create a user manually (e.g., creating another admin)
-    public function store(Request $request) {
-        $this->checkAdmin($request->user());
-
+    // Register a new user
+    public function register(Request $request) {
         $request->validate([
             'name' => 'required',
             'email' => 'required|email|unique:users',
-            'password' => 'required|min:6',
-            'is_admin' => 'boolean'
+            'password' => 'required|min:6'
         ]);
 
-        return User::create([
+        $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'is_admin' => $request->is_admin ?? false
         ]);
+
+        return response()->json([
+            'token' => $user->createToken('auth_token')->plainTextToken,
+            'user' => $user
+        ]);
     }
 
-    // PUT: Update user details
-    public function update(Request $request, $id) {
-        $this->checkAdmin($request->user());
-
-        $user = User::findOrFail($id);
-        
+    // Login user
+    public function login(Request $request) {
         $request->validate([
-            'name' => 'sometimes|required',
-            'email' => 'sometimes|required|email|unique:users,email,'.$id,
-            'is_admin' => 'boolean'
+            'email' => 'required|email',
+            'password' => 'required'
         ]);
 
-        $user->update($request->only(['name', 'email', 'is_admin']));
+        $user = User::where('email', $request->email)->first();
 
-        // Only update password if provided
-        if ($request->filled('password')) {
-            $user->update(['password' => Hash::make($request->password)]);
+        if (! $user || ! Hash::check($request->password, $user->password)) {
+            return response()->json(['message' => 'Invalid credentials'], 401);
         }
 
-        return $user;
+        return response()->json([
+            'token' => $user->createToken('auth_token')->plainTextToken,
+            'user' => $user
+        ]);
     }
-
-    // DELETE: Delete a user
-    public function destroy(Request $request, $id) {
-        $this->checkAdmin($request->user());
-
-        // Prevent admin from deleting themselves
-        if ($request->user()->id == $id) {
-            return response()->json(['message' => 'You cannot delete yourself!'], 400);
-        }
-
-        User::destroy($id);
-        return response()->json(['message' => 'User deleted successfully']);
+    
+    // Logout user
+    public function logout(Request $request) {
+        $request->user()->currentAccessToken()->delete();
+        return response()->json(['message' => 'Logged out']);
     }
 }
