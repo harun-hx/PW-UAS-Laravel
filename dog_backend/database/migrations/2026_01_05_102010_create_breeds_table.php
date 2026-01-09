@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('datasets', function (Blueprint $table) {
+        Schema::create('breeds', function (Blueprint $table) {
             $table->id();
-            $table->string('breed_name'); // e.g. "Arabian"
-            $table->text('description');  // e.g. "Used 500 images from Stanford dataset"
-            $table->integer('image_count'); // e.g. 500
-            $table->string('sample_image_url')->nullable(); // URL to a photo
+            $table->string('breed_name');
+            $table->text('description');
+            $table->integer('image_count');
+            $table->string('sample_image_url')->nullable();
             $table->timestamps();
         });
     }
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('datasets');
+        Schema::dropIfExists('breeds    ');
     }
 };
