@@ -28,3 +28,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     // User Management (Admin Only)
     Route::apiResource('users', UserController::class);
 });
+
+Route::get('/debug', function () {
+    return response()->json(['api' => 'alive']);
+});
