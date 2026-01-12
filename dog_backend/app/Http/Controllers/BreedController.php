@@ -7,14 +7,11 @@ use Illuminate\Http\Request;
 
 class BreedController extends Controller
 {
-    // GET: List all dog breeds (Public)
     public function index() {
         return Breed::all();
     }
 
-    // POST: Add new breed (Admin Only)
     public function store(Request $request) {
-        // Ensure only admin can add
         if (!$request->user()->is_admin) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
@@ -29,7 +26,6 @@ class BreedController extends Controller
         return Breed::create($fields);
     }
 
-    // PUT: Update breed (Admin Only)
     public function update(Request $request, $id) {
         if (!$request->user()->is_admin) {
             return response()->json(['message' => 'Unauthorized'], 403);
@@ -40,7 +36,6 @@ class BreedController extends Controller
         return $breed;
     }
 
-    // DELETE: Remove breed (Admin Only)
     public function destroy(Request $request, $id) {
         if (!$request->user()->is_admin) {
             return response()->json(['message' => 'Unauthorized'], 403);

@@ -9,7 +9,6 @@ use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
-    // Register a new user
     public function register(Request $request) {
         $request->validate([
             'name' => 'required',
@@ -30,7 +29,6 @@ class AuthController extends Controller
         ]);
     }
 
-    // Login user
     public function login(Request $request) {
         $request->validate([
             'email' => 'required|email',
@@ -49,7 +47,6 @@ class AuthController extends Controller
         ]);
     }
     
-    // Logout user
     public function logout(Request $request) {
         $request->user()->currentAccessToken()->delete();
         return response()->json(['message' => 'Logged out']);

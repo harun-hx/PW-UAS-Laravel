@@ -8,20 +8,17 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-    // Middleware-like check for Admin status
     private function checkAdmin($user) {
         if (!$user->is_admin) {
             abort(403, 'Unauthorized action.');
         }
     }
 
-    // GET: List all users
     public function index(Request $request) {
         $this->checkAdmin($request->user());
         return User::all();
     }
 
-    // POST: Create a user manually
     public function store(Request $request) {
         $this->checkAdmin($request->user());
 
@@ -40,7 +37,6 @@ class UserController extends Controller
         ]);
     }
 
-    // PUT: Update user details
     public function update(Request $request, $id) {
         $this->checkAdmin($request->user());
 
@@ -61,7 +57,6 @@ class UserController extends Controller
         return $user;
     }
 
-    // DELETE: Delete a user
     public function destroy(Request $request, $id) {
         $this->checkAdmin($request->user());
 

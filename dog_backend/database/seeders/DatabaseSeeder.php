@@ -11,23 +11,13 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-// 1. Create the ADMIN Account
         User::create([
             'name' => 'Admin Boss',
             'email' => 'admin@horse.com',
-            'password' => Hash::make('password123'), // Log in with this!
+            'password' => Hash::make('password123'),
             'is_admin' => true
         ]);
 
-        // 2. Create a REGULAR USER Account
-        User::create([
-            'name' => 'Regular Joe',
-            'email' => 'user@horse.com',
-            'password' => Hash::make('password123'), // Log in with this!
-            'is_admin' => false
-        ]);
-        
-        // 2. The 7 Breeds from Olga Belitskaya's Kaggle Dataset
         $breeds = [
             [
                 'breed_name' => 'Chihuahua',

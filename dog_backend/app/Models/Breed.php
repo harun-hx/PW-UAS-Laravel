@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Breed extends Model
 {
-    // We explicitly define the table name to avoid confusion
     protected $table = 'breeds';
     
     protected $fillable = [

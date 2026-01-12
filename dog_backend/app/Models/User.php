@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-// 1. Add this import
 use Laravel\Sanctum\HasApiTokens; 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -10,7 +9,6 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    // 2. Add 'HasApiTokens' to this list
     use HasApiTokens, HasFactory, Notifiable;
 
     /**
@@ -22,7 +20,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'is_admin', // Ensure this is here too!
+        'is_admin', 
     ];
 
     /**
